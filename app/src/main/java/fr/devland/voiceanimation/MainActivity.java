@@ -1,38 +1,71 @@
 package fr.devland.voiceanimation;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity implements VoiceView.OnRecordListener{
+
+    private static final String TAG = MainActivity.class.getName();
+
+    private TextView mTextView;
+    private VoiceView mVoiceView;
+    private SpeechRecognizer recognizer;
+    private List<String> voiceTextList;
+    private VoiceRecognitionListener recognitionListener;
+
+    private boolean mIsRecording = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTextView = (TextView) findViewById(R.id.text);
+        mVoiceView = (VoiceView) findViewById(R.id.voiceView);
+        mVoiceView.setOnRecordListener(this);
+        recognitionListener = new VoiceRecognitionListener();
+
+        if(!SpeechRecognizer.isRecognitionAvailable(this))
+            Toast.makeText(this, "No voice recognition available.", Toast.LENGTH_LONG).show();
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onRecordStart() {
+        Log.d(TAG, "onRecordStart");
+
+        recognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        recognizer.setRecognitionListener(recognitionListener);
+        recognizer.startListening(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onRecordFinish() {
+        Log.d(TAG, "onRecordFinish");
+        mIsRecording = false;
+        recognizer.stopListening();
+        voiceTextList = recognitionListener.getTextContentList();
+        Toast.makeText(this, voiceTextList.toString(), Toast.LENGTH_SHORT).show();
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+    @Override
+    protected void onDestroy() {
+        if(mIsRecording){
+            mIsRecording = false;
         }
-
-        return super.onOptionsItemSelected(item);
+        recognizer.destroy();
+        super.onDestroy();
     }
+
+
 }
