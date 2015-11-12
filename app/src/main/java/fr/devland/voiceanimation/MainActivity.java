@@ -11,8 +11,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
-
-public class MainActivity extends Activity implements VoiceView.OnRecordListener{
+/*
+ * Holy Grail. We put everything together.
+ * (If you don't quite get it it's the equivalent of private static void main(String []args))
+ * now you get it huh ?)
+ */
+public class MainActivity extends Activity implements OnRecordListener {
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -34,7 +38,7 @@ public class MainActivity extends Activity implements VoiceView.OnRecordListener
         mVoiceView.setOnRecordListener(this);
         recognitionListener = new VoiceRecognitionListener();
 
-        if(!SpeechRecognizer.isRecognitionAvailable(this))
+        if (!SpeechRecognizer.isRecognitionAvailable(this))
             Toast.makeText(this, "No voice recognition available.", Toast.LENGTH_LONG).show();
 
     }
@@ -60,7 +64,7 @@ public class MainActivity extends Activity implements VoiceView.OnRecordListener
 
     @Override
     protected void onDestroy() {
-        if(mIsRecording){
+        if (mIsRecording) {
             mIsRecording = false;
         }
         recognizer.destroy();

@@ -13,6 +13,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+/*
+ * This is the View that actually do the animation (really).
+ */
+
 public class VoiceView extends View {
 
     private static final String TAG = VoiceView.class.getName();
@@ -152,8 +156,5 @@ public class VoiceView extends View {
         mOnRecordListener = onRecordListener;
     }
 
-    public interface OnRecordListener{
-        void onRecordStart();
-        void onRecordFinish();
-    }
+
 }
