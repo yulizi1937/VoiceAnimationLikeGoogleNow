@@ -13,8 +13,8 @@ import java.util.List;
 
 /*
  * Holy Grail. We put everything together.
- * (If you don't quite get it it's the equivalent of private static void main(String []args))
- * now you get it huh ?)
+ * (If you don't quite get it it's the equivalent of
+ * private static void main(String []args) now you get it huh ?)
  */
 public class MainActivity extends Activity implements OnRecordListener {
 

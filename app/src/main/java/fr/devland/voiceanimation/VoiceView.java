@@ -14,7 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /*
- * This is the View that actually do the animation (really).
+ * This is the View that actually dance(animate (really)).
+ * If you understand what this class does then you're good to go.
+ * You're a good dev, you read comments et tout.
  */
 
 public class VoiceView extends View {
@@ -48,8 +50,8 @@ public class VoiceView extends View {
         init();
     }
 
-    private void init(){
-        mNormalBitmap = BitmapFactory.decodeResource(getResources(),  R.mipmap.vs_micbtn_off);
+    private void init() {
+        mNormalBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.vs_micbtn_off);
         mPressedBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.vs_micbtn_pressed);
         mRecordingBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.vs_micbtn_on);
 
@@ -75,36 +77,36 @@ public class VoiceView extends View {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
-        if(mCurrentRadius > mMinRadius){
+        if (mCurrentRadius > mMinRadius) {
             canvas.drawCircle(width / 2, height / 2, mCurrentRadius, mPaint);
         }
 
-        switch (mState){
+        switch (mState) {
             case STATE_NORMAL:
-                canvas.drawBitmap(mNormalBitmap, width / 2 - mMinRadius,  height / 2 - mMinRadius, mPaint);
+                canvas.drawBitmap(mNormalBitmap, width / 2 - mMinRadius, height / 2 - mMinRadius, mPaint);
                 break;
             case STATE_PRESSED:
-                canvas.drawBitmap(mPressedBitmap, width / 2 - mMinRadius,  height / 2 - mMinRadius, mPaint);
+                canvas.drawBitmap(mPressedBitmap, width / 2 - mMinRadius, height / 2 - mMinRadius, mPaint);
                 break;
             case STATE_RECORDING:
-                canvas.drawBitmap(mRecordingBitmap, width / 2 - mMinRadius,  height / 2 - mMinRadius, mPaint);
+                canvas.drawBitmap(mRecordingBitmap, width / 2 - mMinRadius, height / 2 - mMinRadius, mPaint);
                 break;
         }
     }
 
-    public void animateRadius(float radius){
-        if(radius <= mCurrentRadius){
+    public void animateRadius(float radius) {
+        if (radius <= mCurrentRadius) {
             return;
         }
-        if(radius > mMaxRadius){
+        if (radius > mMaxRadius) {
             radius = mMaxRadius;
-        }else if(radius < mMinRadius){
+        } else if (radius < mMinRadius) {
             radius = mMinRadius;
         }
-        if(radius == mCurrentRadius){
+        if (radius == mCurrentRadius) {
             return;
         }
-        if(mAnimatorSet.isRunning()){
+        if (mAnimatorSet.isRunning()) {
             mAnimatorSet.cancel();
         }
         mAnimatorSet.playSequentially(
@@ -125,7 +127,7 @@ public class VoiceView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getActionMasked()){
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "ACTION_DOWN");
                 mState = STATE_PRESSED;
@@ -133,14 +135,14 @@ public class VoiceView extends View {
                 return true;
             case MotionEvent.ACTION_UP:
                 Log.d(TAG, "ACTION_UP");
-                if(mIsRecording){
+                if (mIsRecording) {
                     mState = STATE_NORMAL;
-                    if(mOnRecordListener != null){
+                    if (mOnRecordListener != null) {
                         mOnRecordListener.onRecordFinish();
                     }
-                }else{
+                } else {
                     mState = STATE_RECORDING;
-                    if(mOnRecordListener != null){
+                    if (mOnRecordListener != null) {
                         mOnRecordListener.onRecordStart();
                     }
                 }
@@ -155,6 +157,5 @@ public class VoiceView extends View {
     public void setOnRecordListener(OnRecordListener onRecordListener) {
         mOnRecordListener = onRecordListener;
     }
-
 
 }
