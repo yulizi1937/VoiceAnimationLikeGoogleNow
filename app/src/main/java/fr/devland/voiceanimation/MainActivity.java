@@ -9,8 +9,6 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 /*
  * Holy Grail. We put everything together.
  * (If you don't quite get it it's the equivalent of
@@ -23,7 +21,7 @@ public class MainActivity extends Activity implements OnRecordListener {
     private TextView mTextView;
     private VoiceView mVoiceView;
     private SpeechRecognizer recognizer;
-    private List<String> voiceTextList;
+    private String[] voiceTextArray;
     private VoiceRecognitionListener recognitionListener;
 
     private boolean mIsRecording = false;
@@ -36,7 +34,7 @@ public class MainActivity extends Activity implements OnRecordListener {
         mTextView = (TextView) findViewById(R.id.text);
         mVoiceView = (VoiceView) findViewById(R.id.voiceView);
         mVoiceView.setOnRecordListener(this);
-        recognitionListener = new VoiceRecognitionListener();
+        recognitionListener = new VoiceRecognitionListener(this);
 
         if (!SpeechRecognizer.isRecognitionAvailable(this))
             Toast.makeText(this, "No voice recognition available.", Toast.LENGTH_LONG).show();
@@ -46,9 +44,12 @@ public class MainActivity extends Activity implements OnRecordListener {
     @Override
     public void onRecordStart() {
         Log.d(TAG, "onRecordStart");
+        mIsRecording = true;
 
         recognizer = SpeechRecognizer.createSpeechRecognizer(this);
         recognizer.setRecognitionListener(recognitionListener);
+
+        Toast.makeText(this, "Recording...", Toast.LENGTH_SHORT).show();
         recognizer.startListening(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH));
     }
 
@@ -57,8 +58,8 @@ public class MainActivity extends Activity implements OnRecordListener {
         Log.d(TAG, "onRecordFinish");
         mIsRecording = false;
         recognizer.stopListening();
-        voiceTextList = recognitionListener.getTextContentList();
-        Toast.makeText(this, voiceTextList.toString(), Toast.LENGTH_SHORT).show();
+        voiceTextArray = recognitionListener.getTextContent().split(" ");
+        Toast.makeText(this, "" + voiceTextArray, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -69,6 +70,10 @@ public class MainActivity extends Activity implements OnRecordListener {
         }
         recognizer.destroy();
         super.onDestroy();
+    }
+
+    public VoiceView getVoiceView() {
+        return mVoiceView;
     }
 
 
