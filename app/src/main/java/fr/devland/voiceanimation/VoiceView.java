@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 /*
  * This is the View that actually dance(animate (really)).
@@ -156,6 +157,21 @@ public class VoiceView extends View {
 
     public void setOnRecordListener(OnRecordListener onRecordListener) {
         mOnRecordListener = onRecordListener;
+    }
+
+    /*
+     * This is method will called by the VoiceRecognitionListener to stop
+     * when it detects that the user finishes talking. (Kind awesome. Agree?)
+     */
+    public boolean endRecording() {
+        Toast.makeText(getContext(), "Ending recording...", Toast.LENGTH_SHORT).show();
+        mState = STATE_NORMAL;
+        if (mOnRecordListener != null) {
+            mOnRecordListener.onRecordFinish();
+        }
+        mIsRecording = !mIsRecording;
+        invalidate();
+        return true;
     }
 
 }

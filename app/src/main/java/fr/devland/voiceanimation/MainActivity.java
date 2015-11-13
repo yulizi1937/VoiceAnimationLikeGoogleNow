@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements OnRecordListener {
         mIsRecording = false;
         recognizer.stopListening();
         voiceTextArray = recognitionListener.getTextContent().split(" ");
-        Toast.makeText(this, "" + voiceTextArray, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Final : " + voiceTextArray[0], Toast.LENGTH_SHORT).show();
     }
 
 

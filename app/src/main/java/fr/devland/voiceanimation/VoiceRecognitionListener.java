@@ -22,14 +22,22 @@ public class VoiceRecognitionListener implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        textContent = "";
+
     }
 
+    /*
+     * Process the result of the SpeechRecognition and
+     * tell the view to update itself for beauty sake.
+     */
     @Override
     public void onResults(Bundle results) {
+
         textContent = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).get(0);
-        Toast.makeText(activity, "Recording : " + textContent, Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Recording wtf " + textContent, Toast.LENGTH_SHORT).show();
         Log.d("ONRESULTS", textContent.toString());
+
+        if(((MainActivity) activity).getVoiceView().endRecording())
+            Toast.makeText(activity, "fuck yeah", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -38,13 +46,17 @@ public class VoiceRecognitionListener implements RecognitionListener {
 
     @Override
     public void onRmsChanged(float rmsdB) {
-        Toast.makeText(activity, "rmsdB : " + rmsdB, Toast.LENGTH_SHORT).show();
-        float radius = (float) Math.log10(Math.max(1, rmsdB - 500)) * ScreenUtils.dp2px(activity, 20);
-        ((MainActivity) activity).getVoiceView().animateRadius(radius);
+
+        int act = ScreenUtils.dp2px(activity, 20) / 2;
+        int min = ScreenUtils.dp2px(activity, 68) / 2;
+
+        ((MainActivity) activity).getVoiceView().animateRadius(Math.max(min, min + rmsdB * act));
+
     }
 
     @Override
     public void onBeginningOfSpeech() {
+        // textContent = "";
     }
 
     @Override
