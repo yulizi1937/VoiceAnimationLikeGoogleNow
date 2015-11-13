@@ -36,18 +36,24 @@ public class VoiceRecognitionListener implements RecognitionListener {
         Toast.makeText(activity, "Recording wtf " + textContent, Toast.LENGTH_SHORT).show();
         Log.d("ONRESULTS", textContent.toString());
 
-        if(((MainActivity) activity).getVoiceView().endRecording())
-            Toast.makeText(activity, "fuck yeah", Toast.LENGTH_SHORT).show();
+        ((MainActivity) activity).getVoiceView().endRecording();
+
     }
 
     @Override
     public void onError(int error) {
     }
 
+    /*
+     * Animate whenever the speaker changes tonality.
+     * You can play with the denominator of variable act to fit
+     * until you find it reasonable.
+     * Who cares by the way, you can leave it as it is.
+     */
     @Override
     public void onRmsChanged(float rmsdB) {
 
-        int act = ScreenUtils.dp2px(activity, 20) / 2;
+        int act = ScreenUtils.dp2px(activity, 20) / 5;
         int min = ScreenUtils.dp2px(activity, 68) / 2;
 
         ((MainActivity) activity).getVoiceView().animateRadius(Math.max(min, min + rmsdB * act));
